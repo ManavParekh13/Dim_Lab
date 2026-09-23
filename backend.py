@@ -317,9 +317,9 @@ def get_news():
 
 @app.get("/robots.txt")
 def get_robots_txt():
-    content = \"\"\"User-agent: *
+    content = """User-agent: *
 Allow: /
-Sitemap: https://dim-lab.onrender.com/sitemap.xml\"\"\"
+Sitemap: https://dim-lab.onrender.com/sitemap.xml"""
     return Response(content=content, media_type="text/plain")
 
 @app.get("/sitemap.xml")
