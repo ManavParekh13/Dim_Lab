@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Advisory | Cane Advisory</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .advisory-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: flex-start;
+    }
+    
+    .result-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 2rem;
+      min-height: 250px;
+      position: relative;
+    }
+
+    .loader {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 255, 136, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+
+    @keyframes spin { 
+      to { transform: rotate(360deg); } 
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(90deg, rgba(157, 78, 221, 0.2), rgba(0, 210, 255, 0.2));
+      border: 1px solid rgba(157, 78, 221, 0.4);
+      padding: 0.3rem 0.8rem;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span>⚲</span> Cane Advisory
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="advisory.html" class="active">AI Advisory</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="news.html">Live News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="animate-fade-in" style="text-align: center; margin-bottom: 3rem;">
+      <h2>Gemini AI Advisory</h2>
+      <p>Generate highly localized, language-specific irrigation advice directly from sensor data.</p>
+    </div>
+
+    <div class="advisory-container animate-fade-in delay-1">
+      <!-- Input Form -->
+      <div class="card glass-panel">
+        <h3>Input Parameters</h3>
+        <form id="advisory-form">
+          <div class="form-group">
+            <label>Plot ID</label>
+            <input type="text" id="farm_id" value="CANE-1005" required>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label>Soil Moisture (%)</label>
+              <input type="number" id="soil_moisture" step="0.1" value="32.5" required>
+            </div>
+            <div class="form-group">
+              <label>Soil Temp (°C)</label>
+              <input type="number" id="soil_temp" step="0.1" value="33.2" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Crop Stage</label>
+            <select id="crop_stage">
+              <option value="Germination">Germination</option>
+              <option value="Tillering">Tillering</option>
+              <option value="Grand Growth" selected>Grand Growth</option>
+              <option value="Maturity">Maturity</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Advisory Language</label>
+            <select id="language">
+              <option value="English">English</option>
+              <option value="Marathi">Marathi (मराठी)</option>
+              <option value="Kannada">Kannada (ಕನ್ನಡ)</option>
+              <option value="Hindi">Hindi (हिंदी)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">✨ Generate Advisory</button>
+        </form>
+      </div>
+
+      <!-- Output Display -->
+      <div>
+        <h3 style="margin-bottom: 1rem;">Generated Response</h3>
+        <div class="result-box glass-panel">
+          <div class="loader" id="loader"></div>
+          
+          <div id="result-content" style="display: none;">
+            <div class="ai-badge" id="source-badge">
+              <span>✦</span> Powered by Gemini AI
+            </div>
+            
+            <h4 style="color: var(--primary); margin: 1rem 0 0.5rem;" id="res-action">Irrigate Soon</h4>
+            
+            <p id="res-text" style="color: #fff; font-size: 1.2rem; line-height: 1.8;">
+              The advisory text will appear here once generated.
+            </p>
+          </div>
+          
+          <div id="empty-state" style="text-align: center; padding-top: 4rem; color: var(--text-muted);">
+            Fill the form and click generate to receive actionable insights.
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Cane Advisory Initiative. Built for precision agriculture.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Pre-fill form from URL query params (if clicking from Dashboard)
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('plot')) document.getElementById('farm_id').value = urlParams.get('plot');
+    if(urlParams.has('moisture')) document.getElementById('soil_moisture').value = urlParams.get('moisture');
+    if(urlParams.has('temp')) document.getElementById('soil_temp').value = urlParams.get('temp');
+    if(urlParams.has('stage')) document.getElementById('crop_stage').value = urlParams.get('stage');
+
+    document.getElementById('advisory-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const payload = {
+        farm_id: document.getElementById('farm_id').value,
+        soil_moisture: parseFloat(document.getElementById('soil_moisture').value),
+        soil_temp: parseFloat(document.getElementById('soil_temp').value),
+        crop_stage: document.getElementById('crop_stage').value,
+        language: document.getElementById('language').value
+      };
+
+      document.getElementById('empty-state').style.display = 'none';
+      document.getElementById('result-content').style.display = 'none';
+      document.getElementById('loader').style.display = 'block';
+
+      try {
+        const res = await fetch('/api/v1/generate-advisory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if(!res.ok) throw new Error('API Error');
+        const data = await res.json();
+
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('result-content').style.display = 'block';
+        
+        document.getElementById('res-action').innerText = data.recommended_action;
+        document.getElementById('res-text').innerText = data.advisory_text;
+        
+        const badge = document.getElementById('source-badge');
+        if(data.source === 'gemini') {
+          badge.innerHTML = '<span>✦</span> Powered by Gemini AI';
+          badge.style.background = 'linear-gradient(90deg, rgba(157, 78, 221, 0.2), rgba(0, 210, 255, 0.2))';
+          badge.style.borderColor = 'rgba(157, 78, 221, 0.4)';
+        } else {
+          badge.innerHTML = '<span>⚙</span> Offline Rule-Based Fallback';
+          badge.style.background = 'rgba(255, 183, 3, 0.2)';
+          badge.style.borderColor = 'rgba(255, 183, 3, 0.4)';
+        }
+        
+      } catch (err) {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'block';
+        document.getElementById('empty-state').innerHTML = `<span style="color:var(--danger)">Failed to connect to backend API.</span>`;
+      }
+    });
+  </script>
+</body>
+</html>

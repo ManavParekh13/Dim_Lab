@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cane Advisory | Premium AI Irrigation</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .hero {
+      text-align: center;
+      padding: 6rem 0;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0,255,136,0.15) 0%, transparent 70%);
+      z-index: -1;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      max-width: 600px;
+      margin: 1.5rem auto 3rem;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+    .feature-card {
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent-blue) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span>⚲</span> Cane Advisory
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="advisory.html">AI Advisory</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="news.html">Live News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero animate-fade-in">
+      <h1>AI-Driven Sugarcane Irrigation</h1>
+      <p>Harness the power of AI and real-time sensor data to optimize your sugarcane yield. Precision agriculture, redefined for the modern farmer.</p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="dashboard.html" class="btn btn-primary">View Dashboard</a>
+        <a href="advisory.html" class="btn btn-outline">Get AI Advisory</a>
+      </div>
+    </section>
+
+    <section class="features animate-fade-in delay-1">
+      <div class="card glass-panel feature-card">
+        <div class="feature-icon">💧</div>
+        <h3>Precision Irrigation</h3>
+        <p>Real-time soil moisture and temperature sensors tell you exactly when to water, saving resources and boosting yield.</p>
+      </div>
+      <div class="card glass-panel feature-card delay-2">
+        <div class="feature-icon">🧠</div>
+        <h3>Gemini AI Integration</h3>
+        <p>Get personalized, localized irrigation advice powered by advanced AI, available in multiple regional languages.</p>
+      </div>
+      <div class="card glass-panel feature-card delay-3">
+        <div class="feature-icon">📰</div>
+        <h3>Live Agriculture News</h3>
+        <p>Stay updated with the latest market trends, weather alerts, and government policies right on your dashboard.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Cane Advisory Initiative. Built for precision agriculture.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

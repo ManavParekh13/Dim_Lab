@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics | Cane Advisory</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--primary), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span>⚲</span> Cane Advisory
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="advisory.html">AI Advisory</a></li>
+        <li><a href="analytics.html" class="active">Analytics</a></li>
+        <li><a href="news.html">Live News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="animate-fade-in" style="text-align: center; margin-bottom: 3rem;">
+      <h2>Impact Analytics</h2>
+      <p>Visualizing the impact of AI-driven advisory across the farming community.</p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="summary-grid animate-fade-in delay-1" id="summary-container">
+      <div class="card glass-panel stat-card"><div class="stat-value">--</div><div class="stat-label">Farms Onboarded</div></div>
+      <div class="card glass-panel stat-card"><div class="stat-value">--</div><div class="stat-label">Water Saved (L)</div></div>
+      <div class="card glass-panel stat-card"><div class="stat-value">--</div><div class="stat-label">Avg Yield Increase</div></div>
+      <div class="card glass-panel stat-card"><div class="stat-value">--</div><div class="stat-label">Power Savings</div></div>
+    </div>
+
+    <!-- Charts -->
+    <div class="analytics-grid animate-fade-in delay-2">
+      <div class="card glass-panel">
+        <h3>Water Usage Comparison (m³)</h3>
+        <div class="chart-container">
+          <canvas id="waterChart"></canvas>
+        </div>
+      </div>
+
+      <div class="card glass-panel">
+        <h3>Yield Impact (Tonnes/Acre)</h3>
+        <div class="chart-container">
+          <canvas id="yieldChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Cane Advisory Initiative. Built for precision agriculture.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Common Chart.js options for dark theme
+    Chart.defaults.color = '#94a3b8';
+    Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
+    Chart.defaults.font.family = "'Outfit', sans-serif";
+
+    async function loadAnalytics() {
+      try {
+        const res = await fetch('/api/v1/analytics');
+        const data = await res.json();
+
+        // 1. Update Summary Stats
+        const sum = data.summary;
+        document.getElementById('summary-container').innerHTML = `
+          <div class="card glass-panel stat-card">
+            <div class="stat-value">${sum.farms_onboarded.toLocaleString()}</div>
+            <div class="stat-label">Farms Onboarded</div>
+          </div>
+          <div class="card glass-panel stat-card">
+            <div class="stat-value">${sum.total_water_saved_million_litres}M</div>
+            <div class="stat-label">Water Saved (Liters)</div>
+          </div>
+          <div class="card glass-panel stat-card">
+            <div class="stat-value">+${sum.avg_yield_increase_pct}%</div>
+            <div class="stat-label">Avg Yield Increase</div>
+          </div>
+          <div class="card glass-panel stat-card">
+            <div class="stat-value">${sum.avg_electricity_savings_pct}%</div>
+            <div class="stat-label">Power Savings</div>
+          </div>
+        `;
+
+        // 2. Render Water Chart
+        new Chart(document.getElementById('waterChart'), {
+          type: 'line',
+          data: {
+            labels: data.months,
+            datasets: [
+              {
+                label: 'Before AI',
+                data: data.water_usage_m3.before_ai,
+                borderColor: '#ff4d4d',
+                backgroundColor: 'rgba(255, 77, 77, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+              },
+              {
+                label: 'With Cane Advisory',
+                data: data.water_usage_m3.after_ai,
+                borderColor: '#00ff88',
+                backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+
+        // 3. Render Yield Chart
+        new Chart(document.getElementById('yieldChart'), {
+          type: 'bar',
+          data: {
+            labels: data.months,
+            datasets: [
+              {
+                label: 'Before AI',
+                data: data.yield_tonnes_per_acre.before_ai,
+                backgroundColor: 'rgba(255, 183, 3, 0.8)',
+                borderRadius: 4
+              },
+              {
+                label: 'With Cane Advisory',
+                data: data.yield_tonnes_per_acre.after_ai,
+                backgroundColor: 'rgba(0, 210, 255, 0.8)',
+                borderRadius: 4
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+          }
+        });
+
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadAnalytics();
+  </script>
+</body>
+</html>

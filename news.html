@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Local News | Cane Advisory</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+    
+    .news-card {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .news-category {
+      align-self: flex-start;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .news-title {
+      font-size: 1.25rem;
+      color: #fff;
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .news-snippet {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .news-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top: 1rem;
+      font-size: 0.85rem;
+      color: #718096;
+    }
+    
+    .skeleton-news {
+      height: 250px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: 12px;
+    }
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span>⚲</span> Cane Advisory
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="advisory.html">AI Advisory</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="news.html" class="active">Live News</a></li>
+        <li><a href="resources.html">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="animate-fade-in" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+      <div>
+        <h2>Live Local News</h2>
+        <p>Fast updates on agriculture policies, weather, and market trends.</p>
+      </div>
+      <button class="btn btn-outline" onclick="loadNews()">↻ Refresh Feed</button>
+    </div>
+
+    <div id="news-container" class="news-grid animate-fade-in delay-1">
+      <!-- Loading Skeletons -->
+      <div class="skeleton-news"></div>
+      <div class="skeleton-news"></div>
+      <div class="skeleton-news"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Cane Advisory Initiative. Built for precision agriculture.</p>
+    </div>
+  </footer>
+
+  <script>
+    function getCategoryColor(cat) {
+      const colors = {
+        'Policy': 'badge-success',
+        'Weather': 'badge-info',
+        'Research': 'badge-warning',
+        'Market': 'badge-danger',
+        'Events': 'badge-success'
+      };
+      return colors[cat] || 'badge-success';
+    }
+
+    async function loadNews() {
+      const container = document.getElementById('news-container');
+      try {
+        const res = await fetch('/api/v1/news');
+        const data = await res.json();
+        
+        container.innerHTML = '';
+        data.news.forEach(item => {
+          container.innerHTML += `
+            <div class="card glass-panel news-card">
+              <span class="badge ${getCategoryColor(item.category)} news-category">${item.category}</span>
+              <h3 class="news-title">${item.title}</h3>
+              <p class="news-snippet">${item.snippet}</p>
+              <div class="news-footer">
+                <span>${item.source}</span>
+                <span>⏱ ${item.timestamp}</span>
+              </div>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p style="color:var(--danger)">Failed to load news feed. Please try again later.</p>`;
+      }
+    }
+
+    // Load news on init
+    loadNews();
+  </script>
+</body>
+</html>

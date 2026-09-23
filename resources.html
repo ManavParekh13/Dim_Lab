@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources & Help | Cane Advisory</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .faq-item {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .faq-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .faq-answer {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    
+    .contact-card {
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <span>⚲</span> Cane Advisory
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="advisory.html">AI Advisory</a></li>
+        <li><a href="analytics.html">Analytics</a></li>
+        <li><a href="news.html">Live News</a></li>
+        <li><a href="resources.html" class="active">Resources</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <div class="animate-fade-in" style="text-align: center; margin-bottom: 3rem;">
+      <h2>Knowledge Base & Support</h2>
+      <p>Find answers to common questions or reach out to our agricultural experts.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem;">
+      <!-- FAQ Section -->
+      <div class="animate-fade-in delay-1">
+        <h3 style="margin-bottom: 1.5rem;">Frequently Asked Questions</h3>
+        
+        <div class="faq-item">
+          <div class="faq-question">How does the AI determine when to irrigate?</div>
+          <div class="faq-answer">The AI analyzes real-time soil moisture, soil temperature, and your specific crop growth stage. It uses these parameters to generate a highly specific recommendation on whether to irrigate, delay, or skip watering.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Do I need an internet connection?</div>
+          <div class="faq-answer">For the advanced Gemini AI insights, yes. However, if you lose connectivity, the system automatically falls back to an offline rule-based advisory engine, ensuring you always get guidance.</div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">How are the moisture percentages calculated?</div>
+          <div class="faq-answer">Sensors placed at the root zone (approx 30-45cm deep) measure volumetric water content. Readings below 35% typically indicate high water stress for sugarcane.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">What languages are supported?</div>
+          <div class="faq-answer">Currently, we support English, Marathi, Kannada, and Hindi. The AI generates contextual advice native to each language.</div>
+        </div>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="animate-fade-in delay-2">
+        <div class="card glass-panel contact-card">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📞</div>
+          <h3>Need Help?</h3>
+          <p>Our agronomists are available Monday through Saturday.</p>
+          <div style="margin: 2rem 0;">
+            <div style="color: var(--primary); font-size: 1.25rem; font-weight: 700;">1800-CANE-HELP</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem;">(1800-2263-4357)</div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%;">Email Support</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 Cane Advisory Initiative. Built for precision agriculture.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
