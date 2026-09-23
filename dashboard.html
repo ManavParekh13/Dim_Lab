@@ -98,6 +98,23 @@
       100% { background-position: -200% 0; }
     }
   </style>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Cane Advisory",
+    "url": "https://dim-lab.onrender.com/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "description": "AI-driven sugarcane irrigation and precision agriculture platform for farmers, agronomists, and agricultural decision-makers.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -182,6 +199,7 @@
         // Render Plots
         const plotsDiv = document.getElementById('plots-container');
         plotsDiv.innerHTML = '';
+        const nowTime = new Date().toLocaleTimeString();
         data.plots.forEach(plot => {
           let badgeClass = 'badge-success';
           if (plot.soil_moisture_status === 'Low') badgeClass = 'badge-danger';
@@ -189,9 +207,13 @@
 
           plotsDiv.innerHTML += `
             <div class="card glass-panel plot-card status-${plot.soil_moisture_status}">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                 <h4 style="margin:0; color:var(--primary)">${plot.plot_id}</h4>
                 <span class="badge ${badgeClass}">${plot.soil_moisture_status}</span>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.3rem;">
+                <span style="display:inline-block; width:6px; height:6px; background:var(--primary); border-radius:50%; box-shadow: 0 0 5px var(--primary);"></span>
+                Live: Last updated at ${nowTime}
               </div>
               <p style="font-size: 0.9rem; margin-bottom: 1.5rem;">${plot.village} • ${plot.area_acres} Acres • ${plot.crop_stage}</p>
               

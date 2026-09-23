@@ -290,6 +290,9 @@ img, video, canvas, iframe {
   max-width: 100%;
   height: auto;
 }
+img, video {
+  aspect-ratio: attr(width) / attr(height);
+}
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {

@@ -1,4 +1,12 @@
-.env
-__pycache__/
-.pytest_cache/
 .venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*.pyd
+.env
+.env.local
+dist/
+build/
+.pytest_cache/

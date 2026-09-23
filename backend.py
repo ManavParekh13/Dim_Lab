@@ -16,7 +16,7 @@ from datetime import datetime, timedelta
 from typing import List, Literal, Optional
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -310,6 +310,26 @@ def get_news():
         }
     ]
     return {"news": news_items}
+
+# --------------------------------------------------------------------------
+# SEO & Routing
+# --------------------------------------------------------------------------
+
+@app.get("/robots.txt")
+def get_robots_txt():
+    content = \"\"\"User-agent: *
+Allow: /
+Sitemap: https://dim-lab.onrender.com/sitemap.xml\"\"\"
+    return Response(content=content, media_type="text/plain")
+
+@app.get("/sitemap.xml")
+def get_sitemap_xml():
+    try:
+        with open("sitemap.xml", "r", encoding="utf-8") as f:
+            content = f.read()
+        return Response(content=content, media_type="application/xml")
+    except FileNotFoundError:
+        return Response(content="<urlset></urlset>", media_type="application/xml")
 
 # --------------------------------------------------------------------------
 # Static frontend
