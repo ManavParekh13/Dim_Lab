@@ -16,7 +16,8 @@ from datetime import datetime, timedelta
 from typing import List, Literal, Optional
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -41,6 +42,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_security_and_caching_headers(request: Request, call_next):
+    response = await call_next(request)
+    # HSTS Header
+    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+    
+    # Static asset caching
+    if request.url.path.endswith((".css", ".js", ".png", ".jpg", ".jpeg", ".svg", ".woff2")):
+        response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        
+    return response
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: HTTPException):
+    try:
+        with open("404.html", "r", encoding="utf-8") as f:
+            content = f.read()
+        return HTMLResponse(content=content, status_code=404)
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>404 Not Found</h1>", status_code=404)
 
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
